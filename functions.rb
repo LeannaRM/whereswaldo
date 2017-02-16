@@ -28,8 +28,35 @@ class SavedTimes
 		CSV.foreach("savedtimes.csv") do |row|
 			dataArray.push({"time" => row[1], "name" => row[0]})
 		end
-		datajson = dataArray.to_json
+		sortedArray = sorttimes(dataArray)
+		datajson = sortedArray.to_json
 		return datajson
+	end
+
+	def sorttimes(dataArray)
+		sortedArray = []
+		minHash = {}
+		dataArray.each do |x|
+			min = x["time"].split("-")[0].to_i
+			if minHash[min] == nil
+				minHash[min] = []
+			end
+			minHash[min].push(x)
+		end
+		minHash.each do |key, value|
+			sortedvalue = value.sort_by { |k| k["time"].split("-")[2].to_f }
+			minHash[key] = sortedvalue
+		end
+		j=0
+		while j < 10
+			if minHash[j] != nil
+				sortedArray.push(*minHash[j])
+
+			end
+			j+=1
+		end
+		binding.pry
+		return sortedArray
 	end
 
 	def savetimestoCSV(params)

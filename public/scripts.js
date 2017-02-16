@@ -4,12 +4,12 @@ window.addEventListener("load", function (e){
 	trigger.addEventListener("click",findwaldo);
 
 	function findwaldo(e){
+		clearInterval(myVar);
 		clickcoordinates = convertClickCoordinates(e);
 		querystring = "valueX=" + clickcoordinates[0] 
 					+ "&valueY=" + clickcoordinates[1] 
 					+ "&time=" + currenttimer.replace(/ /g, "");
-
-		makeQueryPOSTRequest('/check',querystring, function(result){
+		makeRequest('GET','/check?'+querystring, function(result){
 			showresult(result);
 		});
 
@@ -29,7 +29,6 @@ window.addEventListener("load", function (e){
 	}
 
 	function showresult(result) {
-		clearInterval(myVar);
 		var messagenode = document.getElementsByClassName("message")[0];
 		var messagetimer = document.getElementsByClassName("messagetime")[0];
 		var modal = document.getElementsByClassName("modal_container")[0];
@@ -37,7 +36,7 @@ window.addEventListener("load", function (e){
 		modal.style.display = "block";
 		if (result == "false") {
 			messagenode.textContent = "Nope!";
-			messagetimer.textContent = "You've used " + currenttimer;
+			messagetimer.textContent = "It's been " + currenttimer;
 			form.style.display = "none";
 		} else {
 			messagenode.textContent = "You found Waldo!";
@@ -83,10 +82,12 @@ window.addEventListener("load", function (e){
 	}
 
 	function getsavedtimes() {
-		makeJSONGETRequest('/getsaved', function(data){
-			for (var i=0;i<data.length; i++) {
-				time = data[i]["time"]
-				name = data[i]["name"]
+		makeRequest('GET','/getsaved', function(data){
+			jsondata = JSON.parse(data)
+			for (var i=0;i<jsondata.length; i++) {
+				time = jsondata[i]["time"]
+				time = time.replace(/-/g, " ");
+				name = jsondata[i]["name"]
 				htmlstring = "<p>" + name + " " + time + "</p>"
 				container = document.getElementsByClassName("besttimes")[0];
 				container.insertAdjacentHTML('beforeend',htmlstring);
@@ -97,9 +98,9 @@ window.addEventListener("load", function (e){
 	addClickListenerToClassEach("submitbutton",savetime);
 	function savetime(e) {
 		name = e.target.previousElementSibling.value
-		time = currenttimer.replace(/ /g, "");
+		time = currenttimer.replace(/ /g, "-");
 		querystring = "name=" + name + "&time=" + time;
-		makeQueryPOSTRequest('/savetime',querystring);
+		makeRequest('POST','/savetime?'+querystring);
 	}
 
 });
