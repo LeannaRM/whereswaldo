@@ -51,11 +51,9 @@ class SavedTimes
 		while j < 10
 			if minHash[j] != nil
 				sortedArray.push(*minHash[j])
-
 			end
 			j+=1
 		end
-		binding.pry
 		return sortedArray
 	end
 

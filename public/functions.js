@@ -21,19 +21,4 @@ function makeRequest(GETPOST,locationQuerystring,onloadfunction) {
 		}
 	}
 	ourRequest.send();
-	// ourRequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 }
-
-// function makeGETRequest(locationQuerystring,onloadfunction) {
-// 	var ourRequest = new XMLHttpRequest();
-// 	ourRequest.open('GET', locationQuerystring)
-// 	if (onloadfunction != undefined) {
-// 		ourRequest.onload = function(){
-// 			// var ourdata = JSON.parse(ourRequest.responseText)
-// 			// onloadfunction(ourdata);
-// 			var result = ourRequest.responseText;
-// 			onloadfunction(result)
-// 		}
-// 	}
-// 	ourRequest.send()
-// }
